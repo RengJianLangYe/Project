@@ -1,0 +1,13 @@
+{
+  "src": [
+    "pages/LoginPage",
+    "pages/Index",
+    "pages/LearnPage",
+    "pages/ReviewPage",
+    "pages/TestPage",
+    "pages/FilePage",
+    "pages/SettingPage",
+    "pages/LoginVIewPage",
+    "pages/RegisterPage"
+  ]
+}
