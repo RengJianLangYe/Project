@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.FilmMapper">
+
+    <!-- 插入电影 -->
+    <insert id="insert" parameterType="com.example.entity.Film">
+        insert into film (
+            name, cover, descr, year, director,
+            actors, category_id, country, language,
+            date, duration, imdb
+        ) values (
+                     #{name}, #{cover}, #{descr}, #{year}, #{director},
+                     #{actors}, #{categoryId}, #{country}, #{language},
+                     #{date}, #{duration}, #{imdb}
+                 )
+    </insert>
+
+    <!-- 更新电影 -->
+    <update id="updateById" parameterType="com.example.entity.Film">
+        update film
+        set
+            name = #{name},
+            cover = #{cover},
+            descr = #{descr},
+            year = #{year},
+            director = #{director},
+            actors = #{actors},
+            category_id = #{categoryId},
+            country = #{country},
+            language = #{language},
+            date = #{date},
+            duration = #{duration},
+            imdb = #{imdb}
+        where id = #{id}
+    </update>
+
+    <!-- 删除电影 -->
+    <delete id="deleteById" parameterType="int">
+        delete from film
+        where id = #{id}
+    </delete>
+
+    <!-- 查询所有电影 + 支持模糊查询 + 支持关联查询-->
+    <select id="selectAll" resultType="com.example.entity.Film">
+        SELECT film.*, category.name AS categoryName
+        FROM film
+        LEFT JOIN category ON film.category_id = category.id
+        <where>
+            <if test="name != null and name != ''">
+                film.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                film.category_id = #{categoryId}
+            </if>
+        </where>
+        ORDER BY film.id DESC
+    </select>
+
+    <!-- 根据 ID 查询电影 -->
+    <select id="selectById" parameterType="int" resultType="com.example.entity.Film">
+        SELECT film.*, category.name AS categoryName
+        FROM film
+                 LEFT JOIN category ON film.category_id = category.id
+        WHERE film.id = #{id}
+    </select>
+
+</mapper>

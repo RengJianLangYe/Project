@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.mapper.CommentMapper">
+
+    <insert id="insert" parameterType="com.example.entity.Comment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO comment
+            (film_id, score, comment, user_id, time, type)
+        VALUES
+            (#{filmId}, #{score}, #{comment}, #{userId}, #{time}, #{type})
+    </insert>
+
+    <update id="updateById" parameterType="com.example.entity.Comment">
+        UPDATE comment
+        SET
+            film_id = #{filmId},
+            score = #{score},
+            comment = #{comment},
+            user_id = #{userId},
+            time = #{time},
+            type = #{type}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">  <!-- 明确指定类型 -->
+        DELETE FROM comment WHERE id = #{id}
+    </delete>
+
+    <!-- 定义一个名为 selectAll 的查询语句，返回类型为 com.example.entity.Comment -->
+    <select id="selectAll" resultType="com.example.entity.Comment">
+        SELECT comment.*, film.name as filmName, user.name as userName
+        FROM comment
+        LEFT JOIN film ON comment.film_id = film.id
+        LEFT JOIN user ON comment.user_id = user.id
+        <where>
+            <if test="userId != null">
+                AND comment.user_id = #{userId}
+            </if>
+            <if test="filmName != null and filmName != ''">
+                AND film.name LIKE CONCAT('%', #{filmName}, '%')
+            </if>
+            <if test="type != null and type != ''">
+                AND comment.type LIKE CONCAT('%', #{type}, '%')
+            </if>
+            <if test="filmId != null and type != ''">
+                AND comment.film_Id LIKE CONCAT('%', #{filmId}, '%')
+            </if>
+        </where>
+        ORDER BY comment.id DESC
+    </select>
+
+    <select id="selectById" parameterType="int" resultType="com.example.entity.Comment">
+        SELECT * FROM comment
+        WHERE id = #{id}
+    </select>
+
+</mapper>
